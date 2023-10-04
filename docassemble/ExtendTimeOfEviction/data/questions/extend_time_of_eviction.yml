@@ -271,7 +271,7 @@ continue button field: urgency_reminder
 question: |
   Reminder
 subquestion: |
-  % if has_stay_ended.days > 0:
+  % if has_stay_ended.days < 0:
   **IMPORTANT:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
@@ -468,20 +468,20 @@ subquestion: |
   Here are some examples:
   
   % if new_place_check == True:
-  * "I have been searching but could not find an apartment large enough for my family until last week."
-  * "I have had difficulty finding a new place to live because I do not have a vehicle ."
+  * "I have been searching but could not find an apartment large enough for my family until last week. We will be able to move into our new apartment on ${ move_out_date}."
+  * "I have had difficulty finding a new place to live because I do not have a vehicle."
   
   % else:
   * "I could not search for a new apartment because I was in the hospital."
   * "I have had difficulty finding a new place to live because I have mobility issues ."
   % endif
   
-  The form has room for about 7 lines of text, or about 390 characters. You can preview it on the next screen.
+  The form has room for about 10 lines of text, or about 730 characters. You can preview it on the next screen.
 fields:
   - no label: moving_issues_explanation
     input type: area
-    rows: 7
-    maxlength: 390
+    rows: 10
+    maxlength: 750
 ---
 id: preview motion
 continue button field: preview_motion
