@@ -67,14 +67,13 @@ code: |
   judgment_amount
   case_number
   judge.name.first
-  courtroom_number
+  #courtroom_number
   
   
 
   
   set_progress(25)
-  if in_re_check == True:
-    in_re_label
+
   #trial_court_index
   if trial_court_index == -1:
     cook_district
@@ -89,12 +88,13 @@ code: |
   nav.set_section('section_motion')
   if new_place_check == True:
     new_place_date
-  moving_issues_explanation
+  
   if new_place_check == True:
     new_place_move_out_same_date_check
   else:
     move_out_date
-  
+  moving_issues_explanation
+  preview_motion
 
   set_progress(50)
   nav.set_section('section_delivery')
@@ -138,7 +138,6 @@ code: |
   set_progress(100)
   e_signature
   nav.set_section('section_download')
-  motion_reason  
   get_docs_screen
 ---
 id: welcome
@@ -261,16 +260,26 @@ subquestion: |
 fields:
   - Date: stay_end_date
     datatype: date
-    min: ${ today() }
+---
+depends on:
+  - stay_end_date
+code: |
+  has_stay_ended = date_difference(starting=stay_end_date, ending=today())
 ---
 id: urgency reminder
 continue button field: urgency_reminder
 question: |
   Reminder
 subquestion: |
+  % if has_stay_ended.days > 0:
   **IMPORTANT:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
+  % else:
+  Since the stay already ended on ${ stay_end_date }, the judge might not hear your *Motion to Extend Stay of Eviction Order*. You will need a good reason for why the judge should extend the stay.
+  
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you.
+  % endif
 terms:
   - "Notice of Motion": |
       This is a letter telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Motion** for you.
@@ -443,7 +452,7 @@ question: |
   When will you be able to move into your new place to live?
 fields: 
   - Move in date: new_place_date
-    datatype: ThreePartsDate
+    datatype: date
     min: ${ today() }
 ---
 id: new place explanation
@@ -454,21 +463,42 @@ question: |
   Why have you been unable to find a new place to live or unable to move?
   % endif
 subquestion: |
-  When answering this question, please refer to yourself as "Defendant." For example:
+  Explain how the new deadline will let you move out of your current home by ${ move_out_date }.
+  
+  Here are some examples:
   
   % if new_place_check == True:
-  * "Defendant was searching but could not find an apartment large enough for her family until last week."
-  * "Defendant has difficulty finding a new place to live because ... ."
+  * "I have been searching but could not find an apartment large enough for my family until last week."
+  * "I have had difficulty finding a new place to live because I do not have a vehicle ."
   
   % else:
-  "Defendant could not search for a new apartment because she was in the hospital."
-  * "Defendant has difficulty finding a new place to live because ... ."
+  * "I could not search for a new apartment because I was in the hospital."
+  * "I have had difficulty finding a new place to live because I have mobility issues ."
   % endif
+  
+  The form has room for about 7 lines of text, or about 390 characters. You can preview it on the next screen.
 fields:
   - no label: moving_issues_explanation
     input type: area
-    rows: 10
-    maxlength: 1000
+    rows: 7
+    maxlength: 390
+---
+id: preview motion
+continue button field: preview_motion
+reconsider:
+  - motion_extend['preview']
+question: |
+  Motion to Extend Stay of Eviction Order preview
+subquestion: |
+  Click the below image to preview your *Motion to Extend Stay of Eviction Order*.
+  
+  If this looks good, click **Next**.
+  
+  If you want to make changes, click **Back** or go to the [**Motion**](${ url_action('section_motion') }) section.
+  
+  **Note: this is not a complete form.** Finish the program to get all your forms.
+ 
+  ${ motion_extend.as_pdf(key='preview').extract_pages(last=1) }
 ---
 depends on:
   - make_dates_the_same
@@ -495,21 +525,22 @@ code: |
     request_or_requests = "request"
     move_or_moves = "move"
     movant_state = "movants state"
+    i_or_we = "we"
   else:
     have_or_has = "has"
     defendants_apostrophe = "defendant's"
     request_or_requests = "requests"
     move_or_moves = "moves"
     movant_state = "movant states"
+    i_or_we = "I"
 ---
+#Should this be in first person on the motion to continue form?
 reconsider: True
 code: |
-  motion_reason = comma_and_list(users) + " " + move_or_moves + " this Court to extend the stay of the eviction order entered pursuant to 735 ILCS 5/2-1203 and in support thereof " + movant_state + " as follows:" + "\n"
-  motion_reason += "1.  On " + order_date + ", an eviction order was entered against " + comma_and_list(users) + "for possession of the premises and for " + currency(judgment_amount) + ".\n" + "\n"
-  motion_reason += "2. Since the entry of the order, " + comma_and_list(users) + " " + have_or_has + " been trying to find a place to move " + defendants_apostrophe + " family and possessions. " +  moving_issues_explanation + "\n" + "\n"
+  #motion_reason = "1.  On " + order_date + ", an eviction order was entered against " + i_or_we + " for possession of the premises and for " + currency(judgment_amount) + ".\n"
+  motion_reason = "Since the entry of the order, " + i_or_we + " " + have_or_has + " been trying to find a place to move " + defendants_apostrophe + " family and possessions. " +  moving_issues_explanation + "\n"
   if new_place_check == True:
-    motion_reason += "3. " + comma_and_list(users) + " " +  have_or_has + " been able to locate a new apartment that will be available on " + new_place_date + ".\n" + "\n"
-  motion_reason += " WHEREFORE, " + comma_and_list(users) + " respectfully " + request_or_requests + " that the eviction order be stayed until " + move_out_date + " or to any such other time as this court deems just and proper, and for such other relief as the Court deems equitable and just."
+    motion_reason += "3. " + comma_and_list(users) + " " +  have_or_has + " been able to locate a new apartment that will be available on " + new_place_date + ".\n"
 ---
 id: move out date
 question: |
@@ -518,12 +549,12 @@ subquestion: |
   ${collapse_template(move_out_time)}
 fields:
   - Move in date: move_out_date
-    datatype: ThreePartsDate
+    datatype: date
     min: ${ today() }
 ---
 template: move_out_time
 subject: |
-  **How much time is reasonable**
+  **How much time is reasonable?**
 content: |  
   Judges consider several things when deciding whether to give you more time to move, including
 
@@ -558,21 +589,12 @@ code: |
     return sorted( filtered_courts, key=lambda y: y[1])
 
 ---
-id: in re check
+id: beyond 30 days
+continue button field: beyond_30_days
 question: |
- Does the court case have the words "**In re:**" in the name?
+  Stay has ended
 subquestion: |
-  Look at the name of the case at the top of the court papers.
-fields:
-  - no label: in_re_check
-    datatype: yesnoradio
----
-id: in re label
-question: |
-  What does it say after "**In re:**" on the court papers?
-fields:
-  - In re:: in_re_label
-    maxlength: 50
+    Since the ${ stay_end_date } deadline already passed, the judge might not hear your *Motion to Extend Stay of Eviction*. You will need a good reason for why the judge should extend the deadline.
 ---
 depends on:
   - trial_court_index
@@ -686,7 +708,6 @@ choices:
   - Fourth Municipal District, 1500 Maybrook Drive, Maywood: 18
   - Fifth Municipal District, 10220 S. 76th Avenue, Bridgeview: 19
   - Sixth Municipal District, 16501 South Kedzie Parkway, Markham: 20
-  - Juvenile Center, 2245 West Ogden Avenue, Chicago: 23
 ---
 template: cook_district_help
 subject: |
@@ -1053,7 +1074,7 @@ attachment:
   filename: motion-instructions
   skip undefined: True
   editable: False
-  pdf template file: motion_instructions.pdf
+  pdf template file: motion_continue_instructions.pdf
   fields:
       - "fake": ${ "" }
 ---
@@ -1063,9 +1084,9 @@ attachment:
   filename: motion
   skip undefined: True
   editable: False
-  pdf template file: motion.pdf
+  pdf template file: motion_to_continue.pdf
   fields:
-      - "in_re": ${ "In re:" if in_re_check == True else ""} ${ in_re_label if in_re_check == True else ""}
+      - "preview_watermark": ${ watermark if i=='preview' else '' }
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "plaintiffs": ${ users.full_names() if party_label == "plaintiff" or party_label == "petitioner" else other_parties.full_names()}
       - "defendants": ${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
@@ -1089,10 +1110,13 @@ attachment:
       - "is_email_notice_yes": ${ users[0].email_notice }
       - "motion_by_plaintiff": ${ party_label == "plaintiff" or party_label == "petitioner" }
       - "motion_by_defendant": ${ party_label == "defendant" or party_label == "respondent" }
-      - "motion_summary": ${ "Extend Stay of Eviction Order" }
-      - "motion_body": ${ motion_reason }
       #- "additional_motion_cb": ${ True if motion_additional_page else '' }
-      
+      - "extend_cb": ${True}
+      - "continue_cb": ${False}
+      - "extend_task": ${"Move into a new residence" if new_place_check else"Find a new residence" }
+      - "extend_current_deadline": ${stay_end_date}  
+      - "extend_new_deadline": ${move_out_date}
+      - "extend_reason": ${moving_issues_explanation}
       - "delivery_party1_name_full": | 
           % if delivery_parties[0].is_represented:
           ${ delivery_parties[0].lawyer.name.full(middle="full") }, (lawyer for ${ delivery_parties[0].name.full(middle="full") })
@@ -1137,7 +1161,6 @@ attachment:
   editable: False
   pdf template file: motion_additional_proof_delivery.pdf
   fields:
-      - "in_re": ${ "In re:" if in_re_check == True else ""} ${ in_re_label if in_re_check == True else ""}
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "case_number__1": ${ case_number }
       - "case_number__2": ${ case_number }
@@ -1195,7 +1218,6 @@ attachment:
   editable: False
   pdf template file: motion_additional_proof_delivery.pdf
   fields:
-      - "in_re": ${ "In re:" if in_re_check == True else ""} ${ in_re_label if in_re_check == True else ""}
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "case_number__1": ${ case_number }
       - "case_number__2": ${ case_number }
@@ -1253,7 +1275,6 @@ attachment:
   editable: False
   pdf template file: motion_additional_proof_delivery.pdf
   fields:
-      - "in_re": ${ "In re:" if in_re_check == True else ""} ${ in_re_label if in_re_check == True else ""}
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "case_number__1": ${ case_number }
       - "case_number__2": ${ case_number }
@@ -1321,11 +1342,10 @@ attachment:
   editable: False
   pdf template file: notice_of_court_date.pdf
   fields:
-      - "in_re": ${ "In re:" if in_re_check == True else ""} ${ in_re_label if in_re_check == True else ""}
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "plaintiffs": ${ users.full_names() if party_label == "plaintiff" or party_label == "petitioner" else other_parties.full_names()}
       - "defendants": ${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
-
+      - "motion_summary": ${"Motion to Extend Stay of Eviction Order"}
       - "user__1": ${ users[0].name.full(middle="full") }
       - "user__2": ${ users[0].name.full(middle="full") }
       - "user__3": ${ users[0].name.full(middle="full") }
@@ -1343,8 +1363,6 @@ attachment:
       - "e_sign_name__1": ${ users[0].name.full(middle="full") if e_signature else '' }
       - "e_sign_name__2": ${ users[0].name.full(middle="full") if e_signature else '' }
       - "is_email_notice_yes": ${ users[0].email_notice }
-      - "motion_summary": ${ "Extend Stay of Eviction Order" }
-
      # - "hearing_date": ${ hearing_date if (defined('hearing_date') and has_court_date) else '' }
      # - "hearing_time": ${ format_time(hearing_time, format='h:mm') if (defined('hearing_time') and has_court_date) else '' }
      # - "hearing_am_checkbox": ${ True if (has_court_date and format_time(hearing_time, format='a')=='AM') else '' }
@@ -1396,16 +1414,16 @@ attachment:
   filename: order
   skip undefined: True
   editable: False
-  pdf template file: order_on_motion.pdf
+  pdf template file: order_on_motion_to_continue.pdf
   fields:
-      - "in_re": ${ "In re:" if in_re_check == True else ""} ${ in_re_label if in_re_check == True else ""}
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "plaintiffs": ${ users.full_names() if party_label == "plaintiff" or party_label == "petitioner" else other_parties.full_names()}
       - "defendants": ${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
       - "case_number__1": ${ case_number }
       - "motion_by_plaintiff": ${ party_label == "plaintiff" or party_label == "petitioner" }
       - "motion_by_defendant": ${ party_label == "defendant" or party_label == "respondent" }
-      - "motion_summary": ${ "Extend Stay of Eviction Order" }
+      - "extend_cb": ${True}
+      - "continue_cb": ${False}
 ---
 ############### Review page
 id: review screen
@@ -1431,14 +1449,6 @@ review:
     button: |
       **Courtroom:**
       ${ courtroom_number }
-  - Edit: in_re_check
-    button: |
-      **Does the court case have "In re:" in the name?**  
-      ${word(yesno(in_re_check))}
-  - Edit: in_re_label
-    button: |
-      **In re:** ${in_re_label}
-    show if: in_re_check
   - Edit: 
       - trial_court_index
       - recompute:
@@ -1676,14 +1686,6 @@ review:
     button: |
       **Courtroom:**
       ${ courtroom_number }
-  - Edit: in_re_check
-    button: |
-      **Does the court case have "In re:" in the name?**  
-      ${word(yesno(in_re_check))}
-  - Edit: in_re_label
-    button: |
-      **In re:** ${in_re_label}
-    show if: in_re_check
   - Edit: 
       - trial_court_index
       - recompute:
