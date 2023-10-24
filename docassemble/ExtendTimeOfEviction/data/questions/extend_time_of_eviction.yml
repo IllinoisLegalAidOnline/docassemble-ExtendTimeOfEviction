@@ -31,7 +31,7 @@ code: |
   al_form_type = 'existing_case'
   ilao_easy_form_title = "Extend time of eviction"
   ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/extend-time-eviction"
-  form_name = "Motion to Extend Stay of Eviction Order"
+  form_name = "Motion to Continue or Extend Time"
   github_user = 'IllinoisLegalAidOnline'
   github_repo_name = 'docassemble-ExtendTimeOfEviction'
   allowed_courts = ['Circuit']
@@ -64,9 +64,9 @@ code: |
   stay_end_date
   urgency_reminder
   
-  judgment_amount
+  #judgment_amount
   case_number
-  judge.name.first
+  #judge.name.first
   #courtroom_number
   
   
@@ -86,13 +86,15 @@ code: |
   
   set_progress(40)
   nav.set_section('section_motion')
-  if new_place_check == True:
-    new_place_date
   
-  if new_place_check == True:
-    new_place_move_out_same_date_check
-  else:
-    move_out_date
+  #if new_place_check == True:
+  #  new_place_date
+  #if new_place_check == True:
+  #  new_place_move_out_same_date_check
+  #else:
+  #  move_out_date
+  
+  move_out_date
   moving_issues_explanation
   preview_motion
 
@@ -101,7 +103,7 @@ code: |
   #anyone_opposing should always be true in this program
   if anyone_opposing == True:
 
-    notice_intro
+    #notice_intro
     #if trial_court_index == -1:
     #  cook_district
     #courthouse_info
@@ -260,6 +262,7 @@ subquestion: |
 fields:
   - Date: stay_end_date
     datatype: date
+    min: ${ order_date}
 ---
 depends on:
   - stay_end_date
@@ -284,6 +287,7 @@ terms:
   - "Notice of Motion": |
       This is a letter telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Motion** for you.
 ---
+#May be able to delete this question
 id: judgment amount
 question: |
   What is the dollar amount of the judgment against you?
@@ -291,6 +295,7 @@ fields:
   - Judgment amount: judgment_amount
     datatype: currency
 ---
+#May be able to delete this question
 id: judge name 
 question: |
   What was the name of the judge who decided your case?
@@ -455,30 +460,23 @@ fields:
     datatype: date
     min: ${ today() }
 ---
+#Should the language be "home?" "Place?" "Residence?" "Residence" would be my choice if we didn't need to use plain language, but we do. "Place" feels like too vague a term, and "home" feels emotionally loaded.
 id: new place explanation
 question: |
-  % if new_place_check == True:
-  Why could you not find a new place to move to sooner?
-  % else:
-  Why have you been unable to find a new place to live or unable to move?
-  % endif
+  Why do you need more time to move out?
 subquestion: |
   Explain how the new deadline will let you move out of your current home by ${ move_out_date }.
   
   Here are some examples:
-  
-  % if new_place_check == True:
-  * "I have been searching but could not find an apartment large enough for my family until last week. We will be able to move into our new apartment on ${ move_out_date}."
-  * "I have had difficulty finding a new place to live because I do not have a vehicle."
-  
-  % else:
-  * "I could not search for a new apartment because I was in the hospital."
-  * "I have had difficulty finding a new place to live because I have mobility issues ."
-  % endif
+
+  * "I have been searching but could not find an apartment large enough for my family until last week. We will be able to move into our new apartment when our lease begins on ${ move_out_date}."
+  * "I have had difficulty finding a new place to live because I do not have a vehicle. I have found a new residence within walking distance of my workplace. I will be able to rent a truck and move my belongings into the new residence on ${move_out_date}."
+  * "I could not search for a new apartment because I was in the hospital recovering from an injury. I need more time to research available apartments within driving distance of my workplace and apply for a lease."
+  * "I have had difficulty finding a new place to live because I have mobility issues stemming from my disability. I have found some potential residences that meet my accessibility needs, and I am in the process of applying for a lease at one of them."
   
   The form has room for about 10 lines of text, or about 730 characters. You can preview it on the next screen.
 fields:
-  - no label: moving_issues_explanation
+  - I need more time because:: moving_issues_explanation
     input type: area
     rows: 10
     maxlength: 750
@@ -547,10 +545,12 @@ question: |
   When will you be able to move out?
 subquestion: |
   ${collapse_template(move_out_time)}
+  
+  If you have found a new place to live, you may want to enter the date you will be able to move in there.
 fields:
-  - Move in date: move_out_date
+  - Move out date: move_out_date
     datatype: date
-    min: ${ today() }
+    min: ${ stay_end_date }
 ---
 template: move_out_time
 subject: |
@@ -640,23 +640,23 @@ fields:
     datatype: email
     #required: False
 ---
-id: e-signature
-question: |
-  Do you want to add your e-signature to your ${ form_name }?
-subquestion: |
-  If you do not add your **{e-signature}**, you must sign your paper form before you file and deliver it.
-
-  ${ collapse_template(signature_help) }  
-fields:
-  - "Add e-signature?": e_signature
-    datatype: yesnoradio
-terms:
-  - "e-signature": |
-      An e-signature is an electronic signature. It is a digital version of a signature that has the same effect as a hand-written signature. 
+#id: e-signature
+#question: |
+#  Do you want to add your e-signature to your ${ form_name }?
+#subquestion: |
+#  If you do not add your **{e-signature}**, you must sign your paper form before you file and deliver it.
+#
+#  ${ collapse_template(signature_help) }  
+#fields:
+#  - "Add e-signature?": e_signature
+#    datatype: yesnoradio
+#terms:
+#  - "e-signature": |
+#      An e-signature is an electronic signature. It is a digital version of a signature that has the same effect as a hand-written signature. 
 ---
 template: signature_help
 subject: |
-  **What does it mean to sign the *Motion*?**
+  **What does it mean to sign the *${form_name}*?**
 content: |  
   By signing your *Motion*, you are certifying that:
   
@@ -1113,7 +1113,8 @@ attachment:
       #- "additional_motion_cb": ${ True if motion_additional_page else '' }
       - "extend_cb": ${True}
       - "continue_cb": ${False}
-      - "extend_task": ${"Move into a new residence" if new_place_check else"Find a new residence" }
+      #- "extend_task": ${"Move into a new residence" if new_place_check else "Find a new residence" }
+      - "extend_task": ${"Vacate my current residence"}
       - "extend_current_deadline": ${stay_end_date}  
       - "extend_new_deadline": ${move_out_date}
       - "extend_reason": ${moving_issues_explanation}
@@ -1441,10 +1442,6 @@ review:
     button: |
       **Judgment amount:**
       ${currency(judgment_amount)}
-  - Edit: judge.name.first
-    button: |
-      **Judge:**
-      ${judge.name.full(middle='full')}
   - Edit: courtroom_number
     button: |
       **Courtroom:**
@@ -1505,11 +1502,7 @@ review:
     show if: new_place_check
   - Edit: moving_issues_explanation
     button: |
-      % if new_place_check == True:
-      **Why could you not find a new place to move to sooner?**
-      % else:
-      **Why have you been unable to find a new place to live or unable to move?**
-      % endif
+      **Why do you need more time to move out?**
       
       ${moving_issues_explanation}
   - Edit: make_dates_the_same
@@ -1521,7 +1514,7 @@ review:
     button: |
       **Move out date:**
       ${move_out_date}
-    show if: new_place_check == False or make_dates_the_same == False
+    #show if: new_place_check == False or make_dates_the_same == False
   - Edit: users[0].address.address
     button: |
       **Your address:**
@@ -1678,10 +1671,6 @@ review:
     button: |
       **Judgment amount:**
       ${currency(judgment_amount)}
-  - Edit: judge.name.first
-    button: |
-      **Judge:**
-      ${judge.name.full(middle='full')}
   - Edit: courtroom_number
     button: |
       **Courtroom:**
@@ -1752,11 +1741,7 @@ review:
     show if: new_place_check
   - Edit: moving_issues_explanation
     button: |
-      % if new_place_check == True:
-      **Why could you not find a new place to move to sooner?**
-      % else:
-      **Why have you been unable to find a new place to live or unable to move?**
-      % endif
+      **Why do you need more time to move out?**
       
       ${moving_issues_explanation}
   - Edit: make_dates_the_same
@@ -1768,7 +1753,7 @@ review:
     button: |
       **Move out date:**
       ${move_out_date}
-    show if: new_place_check == False or make_dates_the_same == False    
+    #show if: new_place_check == False or make_dates_the_same == False    
 ---
 section: Delivery
 id: delivery info review screen
@@ -1792,10 +1777,6 @@ review:
       % for my_var in other_parties:
         * ${ my_var.name.full(middle="full") }
       % endfor
-  - Edit: judge.name.first
-    button: |
-      **Judge:**
-      ${judge.name.full(middle='full')}
   - Edit: courtroom_number
     button: |
       **Courtroom:**
