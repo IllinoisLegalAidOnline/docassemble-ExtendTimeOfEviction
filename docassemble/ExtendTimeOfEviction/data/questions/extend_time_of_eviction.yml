@@ -39,8 +39,8 @@ code: |
 # Road map
 sections:
   - section_intro: Start
-  - section_judgment: Judgment
-  - section_landlord: Landlord
+  - section_judgment: Eviction order
+  - section_landlord: Landlord info
   - section_motion: Motion
   - section_delivery: Delivery
   - section_user: About you
@@ -52,9 +52,10 @@ code: |
   nav.set_section('section_intro')
   sees_nav_bar
   how_to_use
+  accept_terms
   set_progress(5)
   stay_period
-  accept_terms
+  
   if have_order_check == False:
     no_order_kickout
   
@@ -168,7 +169,7 @@ subquestion: |
   Click on **{green words}** to learn what they mean. Some questions have a question mark in a circle ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that also gives help.
 terms:
   - "Eviction Order": |
-      If your landlord has already won a lawsuit against you to force you to leave your house or apartment, the judge will have issued an order against you. This order is called an Eviction order.
+      If your landlord has already won an eviction lawsuit against you to force you to leave your house or apartment, the judge will have issued an order. This order is called an Eviction Order.
 ---
 template: help_example
 subject: |
@@ -188,9 +189,9 @@ subquestion: |
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
 terms:
   - "stayed": |
-      Delayed
+       If an order is stayed, it does not go into effect right away.
   - "Notice of Motion": |
-      This is a letter telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Motion** for you.
+      This is a form telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Court Date for Motion** for you.
 ---
 template: get_legal_help
 subject: |
@@ -217,7 +218,7 @@ buttons:
 ---
 id: have order check
 question: |
-  Do you have the *Order of Eviction* or other court papers from your case?
+  Do you have the *Eviction Order* or other court papers from your case?
 subquestion: |
   
   ${ collapse_template(find_case_help) }  
@@ -229,17 +230,16 @@ template: find_case_help
 subject: |
   **How can I find this?**
 content: |
-  If your case was heard in Cook County, you can search for your case on the [**Clerk of Court website**](https://www.cookcountyclerkofcourt.org/online-case-information).
+  If your case was heard in Cook County, you can search for your case on the [**Clerk of the Circuit Court of Cook County**](https://www.cookcountyclerkofcourt.org/online-case-information).
 
-
-  If your case was heard in another county, you will need to contact the Clerk of the Court for that county to get your case information.
+  If your case was heard in another county, you will need to contact the Clerk of the Court for that county to get your case information. To learn more, read ILAO's article about [**getting copies of court records**](https://www.illinoislegalaid.org/legal-information/how-get-copies-your-court-records).
 ---
 id: no order kickout
 event: no_order_kickout
 question: |
   Sorry
 subquestion: |
-  You need the information on the Order of Eviction to uses this program.
+  You need the information on the *Eviction Order* to uses this program.
 
   Click **Back** if you made a mistake. Or you can talk with a lawyer to discuss your options. Use **[Get Legal Help](https://www.illinoislegalaid.org/get-legal-help)** to find free or low-cost legal services in your area.
 buttons:
@@ -258,7 +258,7 @@ id: stay end date
 question: |
   When does the *Eviction Order* say you must move out by?
 subquestion: |
-  The order might have a line that reads, "This Order is stayed until ...". That "stay" date is the date you are required to move out by, and it is the date you are asking the judge to extend.
+  The order might say, "This Order is stayed until ..." and then have a date. That "stay" date is the date you are required to move out by. It is the date you are asking the judge to extend.
 fields:
   - Date: stay_end_date
     datatype: date
@@ -279,13 +279,13 @@ subquestion: |
 
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
   % else:
-  Since the stay already ended on ${ stay_end_date }, the judge might not hear your *Motion to Extend Stay of Eviction Order*. You will need a good reason for why the judge should extend the stay.
+  Since the stay already ended on ${ stay_end_date }, the judge might not hear your *Motion to Continue or Extend Time*. You will need a good reason for why the judge should extend the stay.
   
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you.
   % endif
 terms:
   - "Notice of Motion": |
-      This is a letter telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Motion** for you.
+      This is a form telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Court Date for Motion** for you.
 ---
 #May be able to delete this question
 id: judgment amount
@@ -386,7 +386,7 @@ template: other_users_help
 subject: |
   **How do I know if there are others?**
 content: |  
-  At the top of the *Order of Eviction* or any other papers related to your case, all plaintiffs and defendants will be listed.
+  At the top of the *Eviction Order* or any other papers related to your case, all plaintiffs and defendants will be listed.
 ---
 sets:
   - users[i].name.first
@@ -486,9 +486,9 @@ continue button field: preview_motion
 reconsider:
   - motion_extend['preview']
 question: |
-  Motion to Extend Stay of Eviction Order preview
+  *Motion to Continue or Extend Time* preview
 subquestion: |
-  Click the below image to preview your *Motion to Extend Stay of Eviction Order*.
+  Click the below image to preview your *Motion to Continue or Extend Time*.
   
   If this looks good, click **Next**.
   
@@ -567,7 +567,7 @@ continue button field: case_county
 question: |
   In which county was this case filed?
 subquestion: |
-  You must file in the same county where the Order of Eviction was issued.
+  You must file in the same county where the *Eviction Order* was issued.
 fields:
   - no label: trial_court_index
     datatype: integer
@@ -594,7 +594,7 @@ continue button field: beyond_30_days
 question: |
   Stay has ended
 subquestion: |
-    Since the ${ stay_end_date } deadline already passed, the judge might not hear your *Motion to Extend Stay of Eviction*. You will need a good reason for why the judge should extend the deadline.
+    Since the ${ stay_end_date } deadline already passed, the judge might not hear your *Motion to Continue or Extend Time*. You will need a good reason for why the judge should extend the deadline.
 ---
 depends on:
   - trial_court_index
@@ -663,7 +663,7 @@ content: |
   * Everything on the form is true and correct, and
   * You understand that making a false statement on the form is perjury, which can result in criminal penalties.
   
-  See the [**Code of Civil Procedure, 735 ILCS 5/1-109**](https://www.ilga.gov/legislation/ilcs/documents/073500050k1-109.htm), for more information.
+  See the [**Illinois Supreme Court Rule 137**](https://www.illinoiscourts.gov/supreme-court-rules), for more information.
 ---
 id: notice intro
 continue button field: notice_intro
@@ -1022,7 +1022,7 @@ content: |
 ---
 objects:
   - motion_instructions: ALDocument.using(title="Instructions", filename="instructions.pdf", has_addendum=False)
-  - motion_extend: ALDocument.using(title="Motion to Extend Stay of Eviction Order", filename="motion.pdf", has_addendum=False)
+  - motion_extend: ALDocument.using(title="Motion to Continue or Extend Time", filename="motion.pdf", has_addendum=False)
   - motion_additional_delivery: ALDocument.using(title="Additional Proof of Delivery", filename="motion_additional_proof_delivery.pdf", has_addendum=False)
   - motion_additional_delivery_2: ALDocument.using(title="Additional Proof of Delivery 2", filename="appearance_additional_proof_delivery_2.pdf", has_addendum=False)
   - motion_additional_delivery_3: ALDocument.using(title="Additional Proof of Delivery 3", filename="appearance_additional_proof_delivery_3.pdf", has_addendum=False)
@@ -1065,7 +1065,7 @@ objects:
   - al_court_bundle: ALDocumentBundle.using(elements=[motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="Motion")
 ---
 objects:
-  - motion_single_pdf_bundle: ALDocumentBundle.using(elements=[motion_extend, motion_additional_delivery, motion_additional_delivery_2, motion_additional_delivery_3], filename="motion.pdf", title="Motion to Extend Stay of Eviction Order")
+  - motion_single_pdf_bundle: ALDocumentBundle.using(elements=[motion_extend, motion_additional_delivery, motion_additional_delivery_2, motion_additional_delivery_3], filename="motion.pdf", title="Motion to Continue or Extend Time")
   - notice_single_pdf_bundle: ALDocumentBundle.using(elements=[notice_attachment, motion_additional_delivery, motion_additional_delivery_2, motion_additional_delivery_3], filename="notice.pdf", title="Notice of Court Date for Motion")
 ---
 attachment:
@@ -1087,6 +1087,7 @@ attachment:
   pdf template file: motion_to_continue.pdf
   fields:
       - "preview_watermark": ${ watermark if i=='preview' else '' }
+      - "attach_statement_no": ${ True }
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "plaintiffs": ${ users.full_names() if party_label == "plaintiff" or party_label == "petitioner" else other_parties.full_names()}
       - "defendants": ${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
@@ -1169,7 +1170,7 @@ attachment:
       - "defendants": ${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
 
 
-      - "form_to_be_delivered": ${ "Motion to Extend Stay of Eviction Order" }
+      - "form_to_be_delivered": ${ "Motion to Continue or Extend Time" }
       - "delivery_party1_name_full": | 
           % if delivery_parties[2].is_represented:
           ${ delivery_parties[2].lawyer.name.full(middle="full") }, (lawyer for ${ delivery_parties[2].name.full(middle="full") })
@@ -1346,7 +1347,7 @@ attachment:
       - "trial_court_county": ${ trial_court.address.county.upper() }
       - "plaintiffs": ${ users.full_names() if party_label == "plaintiff" or party_label == "petitioner" else other_parties.full_names()}
       - "defendants": ${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
-      - "motion_summary": ${"Motion to Extend Stay of Eviction Order"}
+      - "motion_summary": ${"Motion to Continue or Extend Time"}
       - "user__1": ${ users[0].name.full(middle="full") }
       - "user__2": ${ users[0].name.full(middle="full") }
       - "user__3": ${ users[0].name.full(middle="full") }
@@ -1423,8 +1424,8 @@ attachment:
       - "case_number__1": ${ case_number }
       - "motion_by_plaintiff": ${ party_label == "plaintiff" or party_label == "petitioner" }
       - "motion_by_defendant": ${ party_label == "defendant" or party_label == "respondent" }
-      - "extend_cb": ${True}
-      - "continue_cb": ${False}
+      - "extend_cb": ${False}
+      - "continue_cb": ${True}
 ---
 ############### Review page
 id: review screen
@@ -1434,6 +1435,14 @@ question: |
 subquestion: |
   Edit your answers below.
 review: 
+  - Edit: order_date
+    button: |
+      **Order entry date:**
+      ${order_date}
+  - Edit: stay_end_date
+    button: |
+      **When does the *Eviction Order* say you must move out by?**
+      ${stay_end_date}
   - Edit: case_number
     button: |
       **Case number:**
@@ -1489,32 +1498,22 @@ review:
 
       % for my_var in other_parties:
         * ${ my_var.name.full(middle="full") }
-      % endfor
-        
-  - Edit: new_place_check
+      % endfor    
+  - Edit: move_out_date
     button: |
-      **Have you found a new place to live?**
-      ${word(yesno(new_place_check))}
-  - Edit: new_place_date
-    button: |
-      **When can you move into your new place?**
-      ${new_place_date}
-    show if: new_place_check
+      **Move out date:**
+      ${move_out_date}
   - Edit: moving_issues_explanation
     button: |
       **Why do you need more time to move out?**
       
       ${moving_issues_explanation}
-  - Edit: make_dates_the_same
-    button: |
-      **Is ${new_place_date} the earliest date you can move out?**
-      ${word(yesno(make_dates_the_same))}
-    show if: new_place_check
-  - Edit: move_out_date
-    button: |
-      **Move out date:**
-      ${move_out_date}
-    #show if: new_place_check == False or make_dates_the_same == False
+  #- Edit: make_dates_the_same
+  #  button: |
+  #    **Is ${new_place_date} the earliest date you can move out?**
+  #    ${word(yesno(make_dates_the_same))}
+  #  show if: new_place_check
+  
   - Edit: users[0].address.address
     button: |
       **Your address:**
@@ -1569,10 +1568,12 @@ review:
     show if: x.is_represented
   - Edit: x.address.address
     button: |
-      % if x.is_represented == True:
-      **${ x.lawyer.name.full(middle="full") }'s address: **
+      % if x == users[0]:
+      **Your address:**
+      % elif x.is_represented == True:
+      **${ x.lawyer.name.full(middle="full") }'s address:**
       % else:
-      **${ x.name.full(middle="full") }'s address: **
+      **${ x.name.full(middle="full") }'s address:**
       % endif
       ${ x.address.on_one_line(bare=True) }
   - Edit: x.knows_delivery_method
@@ -1601,6 +1602,19 @@ review:
       **Delivery on:**
       ${ x.delivery_date } at ${ format_time(x.delivery_time, "h:mm a") }
     show if: x.knows_delivery_method
+  - Edit: x.phone_number
+    button: |
+      **Your phone number:**
+      ${ phone_number_formatted(users[0].phone_number) }
+  - Edit: x.email_notice
+    button: |
+      **Do you have an email address?**
+      ${ word(yesno(users[0].email_notice)) }
+  - Edit: x.email
+    button: |
+      **Your email:**
+      ${ users[0].email }
+    show if: x.email_notice
 ---
 id: users review
 continue button field: users.revisit
@@ -1648,14 +1662,22 @@ columns:
 delete buttons: True
 confirm: True
 ---
-section: Judgment
+section: Eviction order
 id: judgment review screen
 event: section_judgment
 question: |
-  Judgment details
+  Eviction order
 subquestion: |
   Edit your answers below.
 review: 
+  - Edit: order_date
+    button: |
+      **Order entry date:**
+      ${order_date}
+  - Edit: stay_end_date
+    button: |
+      **When does the *Eviction Order* say you must move out by?**
+      ${stay_end_date}
   - Edit: users.revisit
     button: |
       **Your party: (Edit to change name, lawyer, address, and delivery info)**
@@ -1663,6 +1685,13 @@ review:
       % for my_var in users:
         * ${ my_var.name.full(middle="full") }
       % endfor
+  - Edit: other_parties.revisit
+    button: |
+      **Your landlord and any other opposing parties: (Edit to change name, lawyer, address, and delivery info)**
+
+      % for my_var in other_parties:
+        * ${ my_var.name.full(middle="full") }
+      % endfor   
   - Edit: case_number
     button: |
       **Case number:**
@@ -1706,7 +1735,7 @@ review:
       % endif      
     show if: trial_court_index == -1 
 ---
-section: Landlord
+section: Landlord info
 id: landlord review screen
 event: section_landlord
 question: | 
@@ -1730,6 +1759,10 @@ question: |
 subquestion: |
   Edit your answers below.
 review:
+  - Edit: move_out_date
+    button: |
+      **Move out date:**
+      ${move_out_date}
   - Edit: new_place_check
     button: |
       **Have you found a new place to live?**
@@ -1753,7 +1786,6 @@ review:
     button: |
       **Move out date:**
       ${move_out_date}
-    #show if: new_place_check == False or make_dates_the_same == False    
 ---
 section: Delivery
 id: delivery info review screen
