@@ -39,7 +39,7 @@ code: |
 # Road map
 sections:
   - section_intro: Start
-  - section_judgment: Eviction order
+  - section_judgment: Eviction Order
   - section_landlord: Landlord info
   - section_motion: Motion
   - section_delivery: Delivery
@@ -108,6 +108,9 @@ code: |
     #if trial_court_index == -1:
     #  cook_district
     #courthouse_info
+    
+    if has_court_date:
+      hearing_date
 
     delivery_intro
     if delivery_parties.number() > 8:
@@ -230,7 +233,7 @@ template: find_case_help
 subject: |
   **How can I find this?**
 content: |
-  If your case was heard in Cook County, you can search for your case on the [**Clerk of the Circuit Court of Cook County**](https://www.cookcountyclerkofcourt.org/online-case-information).
+  If your case was heard in Cook County, you can search for your case on the [**Clerk of the Circuit Court of Cook County website**](https://www.cookcountyclerkofcourt.org/online-case-information).
 
   If your case was heard in another county, you will need to contact the Clerk of the Court for that county to get your case information. To learn more, read ILAO's article about [**getting copies of court records**](https://www.illinoislegalaid.org/legal-information/how-get-copies-your-court-records).
 ---
@@ -693,6 +696,32 @@ code: |
   court_zip = str(trial_court.address.zip)
   courthouse_info = court_name + ", " + court_street_address + ", " + court_city + ", " + court_state + " " + court_zip
 ---
+id: hearing scheduled
+question: |
+  Do you already have a court date scheduled for this motion?
+subquestion: |
+  In some counties, the circuit clerk can give you a hearing date before you file your motion. In other counties, you will get a hearing date when you file your motion. If you have this information now, you can add it to your forms.
+  
+  If the clerk gives you the hearing date after you file your *Motion*, you can add it to your *Notice of Court Date for Motion* later.
+fields:
+  - "Know court date and time?": has_court_date
+    datatype: yesnoradio
+---
+id: hearing info
+question: |
+  Court hearing information
+subquestion: |
+  Enter the date, time, and courtroom information for the court hearing on your motion. If the clerk did not give you a courtroom yet, leave it blank. You can add it to the *Notice of Court Date for Motion* after you file your *Motion*.
+fields:
+  - Date: hearing_date
+    datatype: date
+    min: ${ today().format("yyyy-MM-dd") }
+  - Time: hearing_time
+    datatype: time
+  - Courtroom: courtroom
+    maxlength: 10
+    required: False
+---
 id: Cook County district
 question: |
   In which Cook County courthouse is your case?
@@ -1152,7 +1181,6 @@ attachment:
       - "delivery_party2_time": ${ format_time(delivery_parties[1].delivery_time, format='h:mm') if delivery_parties[1].knows_delivery_method and delivery_parties[1].knows_delivery_time else '' }
       - "is_delivery_party2_am_yes": ${ True if delivery_parties[1].knows_delivery_method and format_time(delivery_parties[1].delivery_time, format='a')=='AM' else '' }
       - "is_delivery_party2_am_no": ${ True if delivery_parties[1].knows_delivery_method and format_time(delivery_parties[1].delivery_time, format='a')=='PM' else '' }
-
       - "is_additional_proof_delivery_yes": ${ delivery_parties.number() > 2 }
 ---
 attachment:
@@ -1365,10 +1393,10 @@ attachment:
       - "e_sign_name__1": ${ users[0].name.full(middle="full") if e_signature else '' }
       - "e_sign_name__2": ${ users[0].name.full(middle="full") if e_signature else '' }
       - "is_email_notice_yes": ${ users[0].email_notice }
-     # - "hearing_date": ${ hearing_date if (defined('hearing_date') and has_court_date) else '' }
-     # - "hearing_time": ${ format_time(hearing_time, format='h:mm') if (defined('hearing_time') and has_court_date) else '' }
-     # - "hearing_am_checkbox": ${ True if (has_court_date and format_time(hearing_time, format='a')=='AM') else '' }
-     # - "hearing_pm_checkbox": ${ True if (has_court_date and format_time(hearing_time, format='a')=='PM') else '' }
+      - "hearing_date": ${ hearing_date if (defined('hearing_date') and has_court_date) else '' }
+      - "hearing_time": ${ format_time(hearing_time, format='h:mm') if (defined('hearing_time') and has_court_date) else '' }
+      - "hearing_am_checkbox": ${ True if (has_court_date and format_time(hearing_time, format='a')=='AM') else '' }
+      - "hearing_pm_checkbox": ${ True if (has_court_date and format_time(hearing_time, format='a')=='PM') else '' }
       - "hearing_courtroom": ${ courtroom_number }
       - "courthouse_address": ${ courthouse_info }
       - "clerk_phone": ${ trial_court.phone }
@@ -1437,7 +1465,7 @@ subquestion: |
 review: 
   - Edit: order_date
     button: |
-      **Order entry date:**
+      **Date judge entered the *Eviction Order*:**
       ${order_date}
   - Edit: stay_end_date
     button: |
@@ -1499,9 +1527,23 @@ review:
       % for my_var in other_parties:
         * ${ my_var.name.full(middle="full") }
       % endfor    
+  - Edit: has_court_date
+    button: |
+      **Do you already have a court date for your motion from the clerk?**
+      ${ word(yesno(has_court_date)) }
+  - Edit: hearing_date
+    button: |
+      **Motion court date on:**
+      ${ hearing_date } at ${ format_time(hearing_time, "h:mm a") }
+    show if: has_court_date
+  - Edit: courtroom
+    button: |
+      **Courtroom:**
+      ${ courtroom }
+    show if: has_court_date
   - Edit: move_out_date
     button: |
-      **Move out date:**
+      **New move out date:**
       ${move_out_date}
   - Edit: moving_issues_explanation
     button: |
@@ -1543,9 +1585,7 @@ generic object: ALIndividual
 question: |
   Edit ${ x.name.full(middle="full") }'s information
 subquestion: |  
-  % if x == users[0]:
-  Edit your address, phone number, and email address in the [**About you**](${ url_action('section_about_you') }) section.
-  % else:
+  % if x != users[0]:
   If you don't see lawyer, address, or delivery information, then it might not be entered yet. Continue the program to answer all the questions.
   % endif
 review: 
@@ -1662,7 +1702,7 @@ columns:
 delete buttons: True
 confirm: True
 ---
-section: Eviction order
+section: Eviction Order
 id: judgment review screen
 event: section_judgment
 question: |
@@ -1672,7 +1712,7 @@ subquestion: |
 review: 
   - Edit: order_date
     button: |
-      **Order entry date:**
+      **Date judge entered the *Eviction Order*:**
       ${order_date}
   - Edit: stay_end_date
     button: |
@@ -1761,7 +1801,7 @@ subquestion: |
 review:
   - Edit: move_out_date
     button: |
-      **Move out date:**
+      **New move out date:**
       ${move_out_date}
   - Edit: new_place_check
     button: |
@@ -1782,10 +1822,6 @@ review:
       **Is ${new_place_date} the earliest date you can move out?**
       ${word(yesno(make_dates_the_same))}
     show if: new_place_check
-  - Edit: move_out_date
-    button: |
-      **Move out date:**
-      ${move_out_date}
 ---
 section: Delivery
 id: delivery info review screen
@@ -1809,10 +1845,20 @@ review:
       % for my_var in other_parties:
         * ${ my_var.name.full(middle="full") }
       % endfor
-  - Edit: courtroom_number
+  - Edit: has_court_date
+    button: |
+      **Do you already have a court date for your motion from the clerk?**
+      ${ word(yesno(has_court_date)) }
+  - Edit: hearing_date
+    button: |
+      **Motion court date on:**
+      ${ hearing_date } at ${ format_time(hearing_time, "h:mm a") }
+    show if: has_court_date
+  - Edit: courtroom
     button: |
       **Courtroom:**
-      ${ courtroom_number }
+      ${ courtroom }
+    show if: has_court_date
 ---
 section: About you
 id: user info review screen
