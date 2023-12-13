@@ -42,7 +42,7 @@ sections:
   - section_judgment: Eviction Order
   - section_landlord: Landlord info
   - section_motion: Motion
-  - section_delivery: Delivery
+  - section_delivery: Notice and delivery
   - section_user: About you
   - section_download: Download  
 ---
@@ -103,7 +103,7 @@ code: |
   nav.set_section('section_delivery')
   #anyone_opposing should always be true in this program
   if anyone_opposing == True:
-
+    delivery_intro
     #notice_intro
     #if trial_court_index == -1:
     #  cook_district
@@ -112,7 +112,6 @@ code: |
     if has_court_date:
       hearing_date
 
-    delivery_intro
     if delivery_parties.number() > 8:
       extra_delivery_forms
     set_progress(75)
@@ -678,7 +677,6 @@ subquestion: |
   You must tell them about your motion and when you will present it to the judge.
 
   If someone in the case has a lawyer, you must tell their lawyer.
-
 ---
 depends on:
   - trial_court_index
@@ -763,11 +761,11 @@ subquestion: |
 id: delivery intro
 continue button field: delivery_intro
 question: |
-  Send your ${ form_name } to all other parties
+  Tell  all other parties in your case about your motion
 subquestion: |
   These are the other parties in this case: ${comma_and_list(delivery_parties)}.
-
-  You must send a copy of your ${ form_name } to each of them.
+  
+  You must tell them about your motion and when the judge will decide whether to give you more time.  You must send copies of your forms to each party.
 
   If someone in the case has a lawyer, you must send it to the lawyer.
 ---
@@ -1007,7 +1005,6 @@ subquestion: |
 
   * If a party in your case does not have a lawyer, you can hand-deliver the forms to them or to a family member who is 13 or older at their home.
   * If they do have a lawyer, you can hand-deliver the forms to the lawyer or to the lawyer's office.
-
 ---
 id: get docs screen
 event: get_docs_screen
@@ -1479,10 +1476,6 @@ review:
     button: |
       **Judgment amount:**
       ${currency(judgment_amount)}
-  - Edit: courtroom_number
-    button: |
-      **Courtroom:**
-      ${ courtroom_number }
   - Edit: 
       - trial_court_index
       - recompute:
@@ -1539,7 +1532,11 @@ review:
   - Edit: courtroom
     button: |
       **Courtroom:**
+      % if courtroom != "":
       ${ courtroom }
+      % else:
+      None entered
+      % endif
     show if: has_court_date
   - Edit: move_out_date
     button: |
@@ -1740,10 +1737,6 @@ review:
     button: |
       **Judgment amount:**
       ${currency(judgment_amount)}
-  - Edit: courtroom_number
-    button: |
-      **Courtroom:**
-      ${ courtroom_number }
   - Edit: 
       - trial_court_index
       - recompute:
@@ -1823,7 +1816,7 @@ review:
       ${word(yesno(make_dates_the_same))}
     show if: new_place_check
 ---
-section: Delivery
+section: Notice and delivery
 id: delivery info review screen
 event: section_delivery
 question: |
@@ -1857,7 +1850,11 @@ review:
   - Edit: courtroom
     button: |
       **Courtroom:**
+      % if courtroom != "":
       ${ courtroom }
+      % else:
+      None entered
+      % endif
     show if: has_court_date
 ---
 section: About you
@@ -1889,3 +1886,7 @@ review:
       **Your email:**
       ${ users[0].email }
     show if: users[0].email_notice
+  - Edit: e_signature
+    button: |
+      **Do you want to add your e-signature to your forms?**
+      ${ word(yesno(e_signature)) }
