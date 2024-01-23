@@ -188,7 +188,7 @@ subquestion: |
 
   **IMPORTANT:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires, but the Sheriff may evict you after the stay period ends.
 terms:
   - "stayed": |
        If an order is stayed, it does not go into effect right away.
@@ -467,7 +467,7 @@ id: new place explanation
 question: |
   Why do you need more time to move out?
 subquestion: |
-  Explain how the new deadline will let you move out of your current home by ${ move_out_date }.
+  In the box below, tell the Court why you need more time. If you can, explain how the new deadline will let you move out of your current home by ${ move_out_date }.
   
   Here are some examples:
 
@@ -476,7 +476,7 @@ subquestion: |
   * "I could not search for a new apartment because I was in the hospital recovering from an injury. I need more time to research available apartments within driving distance of my workplace and apply for a lease."
   * "I have had difficulty finding a new place to live because I have mobility issues stemming from my disability. I have found some potential residences that meet my accessibility needs, and I am in the process of applying for a lease at one of them."
   
-  The form has room for about 10 lines of text, or about 730 characters. You can preview it on the next screen.
+  The form has room for about 10 lines of text, or about 730 characters. You can preview it on the next screen. If you have a document that helps show why you need more time, such as a doctor's note, you may want to include a copy of it with your forms.
 fields:
   - I need more time because:: moving_issues_explanation
     input type: area
@@ -490,7 +490,7 @@ reconsider:
 question: |
   *Motion to Continue or Extend Time* preview
 subquestion: |
-  Click the below image to preview your *Motion to Continue or Extend Time*.
+  Click the below image to preview the first page of your *Motion to Continue or Extend Time*.
   
   If this looks good, click **Next**.
   
@@ -676,7 +676,7 @@ subquestion: |
 
   You must tell them about your motion and when you will present it to the judge.
 
-  If someone in the case has a lawyer, you must tell their lawyer.
+  If someone in the case has a lawyer, you only need to tell their lawyer.
 ---
 depends on:
   - trial_court_index
@@ -859,6 +859,8 @@ question: |
   % endif
 subquestion: |
   ${ collapse_template(delivery_method_help) }  
+  
+  The Proof of Delivery is where you explain how you will send a copy of your motion to the other parties in the case.
 
   For best results, complete the Proof of Delivery section and send the forms today.
 
@@ -969,7 +971,7 @@ question: |
   When will you send your ${ form_name } to ${ x.name.full(middle="full") }?
   % endif
 subquestion: |
-  Be sure to do this **before** you have a hearing on this ${ form_name }. For best results, complete the Proof of Delivery section and send the forms today.
+  Do this as soon as you possibly can. For best results, complete the Proof of Delivery section and send the forms today. If you wait too long, the Court may reject your motion for improper service.
   
   **Note:** If you do not know this now, be sure to add it to the Proof of Delivery section of your forms later.
 fields:
