@@ -186,7 +186,7 @@ question: |
 subquestion: |
   Most Eviction Orders are **{stayed}** for a number of days. The Sheriff cannot evict you until the stay period is over. 
 
-  **IMPORTANT:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
+  **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff.
   
@@ -262,7 +262,7 @@ id: stay end date
 question: |
   When does the *Eviction Order* say you must move out by?
 subquestion: |
-  The order typically says that “Defendants must move out of the property” on or before a certain day. Or the order might say, "This Order is stayed until ..." and then have a date. That "stay" date is the date you are required to move out by. It is the date you are asking the judge to extend.
+  The order typically says that "Defendants must move out of the property" on or before a certain day. Or the order might say, "This Order is stayed until ..." and then have a date. That "stay" date is the date you are required to move out by. It is the date you are asking the judge to extend.
 fields:
   - Date: stay_end_date
     datatype: date
@@ -279,7 +279,7 @@ question: |
   Reminder
 subquestion: |
   % if has_stay_ended.days < 0:
-  **IMPORTANT:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
+  **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
   After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
   % else:
@@ -676,9 +676,9 @@ question: |
 subquestion: |
   These are the other parties in this case: ${comma_and_list(delivery_parties)}.
 
-  You must tell them about your motion and when you will present it to the judge.
+  You must tell them about your motion and when you will present it to the judge. You can do this by sending a copy of your ${ form_name } to each of them.
 
-  If someone in the case has a lawyer, you only need to tell their lawyer.
+  If someone in the case has a lawyer, you only need to send it to their lawyer.
 ---
 depends on:
   - trial_court_index
