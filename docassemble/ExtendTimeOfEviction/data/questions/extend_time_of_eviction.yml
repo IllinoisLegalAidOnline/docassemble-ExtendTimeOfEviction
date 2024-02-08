@@ -188,7 +188,9 @@ subquestion: |
 
   **IMPORTANT:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you when the stay period ends.
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff.
+  
+  If your motion is not heard before the stay period ends, the Sheriff can evict you. Giving the Sheriff a copy of your motion may delay the Sheriff from evicting you before your motion is heard, but the Sheriff could still evict you.
 terms:
   - "stayed": |
        If an order is stayed, it does not go into effect right away.
@@ -260,7 +262,7 @@ id: stay end date
 question: |
   When does the *Eviction Order* say you must move out by?
 subquestion: |
-  The order might say, "This Order is stayed until ..." and then have a date. That "stay" date is the date you are required to move out by. It is the date you are asking the judge to extend.
+  The order typically says that “Defendants must move out of the property” on or before a certain day. Or the order might say, "This Order is stayed until ..." and then have a date. That "stay" date is the date you are required to move out by. It is the date you are asking the judge to extend.
 fields:
   - Date: stay_end_date
     datatype: date
@@ -767,7 +769,7 @@ subquestion: |
   
   You must tell them about your motion and when the judge will decide whether to give you more time.  You must send copies of your forms to each party.
 
-  If someone in the case has a lawyer, you must send it to the lawyer.
+  If someone in the case has a lawyer, you only need to send it to their lawyer.
 ---
 #how do i get this subquestion to work?
 id: has lawyer
@@ -860,7 +862,7 @@ question: |
 subquestion: |
   ${ collapse_template(delivery_method_help) }  
   
-  The Proof of Delivery is where you explain how you will send a copy of your forms to the other parties in the case.
+  The Proof of Delivery section is where you explain how you will send a copy of your forms to the other parties in the case.
 
   For best results, complete the Proof of Delivery section and send the forms today.
 
