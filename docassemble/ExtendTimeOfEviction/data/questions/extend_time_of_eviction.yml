@@ -184,13 +184,15 @@ continue button field: stay_period
 question: |
   Stay period
 subquestion: |
-  Most Eviction Orders are **{stayed}** for a number of days. The Sheriff cannot evict you until the stay period is over. 
+  Most Eviction Orders are **{stayed}** for a number of days. The sheriff cannot evict you until the stay period is over. 
 
   **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
 
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff.
+  After you file the motion, you should hand deliver a copy of the motion and the **{Notice of Motion}** to the sheriff's office in the courthouse where the motion will be heard.
   
-  If your motion is not heard in court before the stay period ends, the Sheriff can evict you. Giving the Sheriff a copy of your motion may delay the Sheriff from evicting you before your motion is heard, but the Sheriff could still evict you.
+  If your motion is not heard in court before the stay period ends, the Sheriff can evict you. Giving the Sheriff a copy of your motion may delay the Sheriff from evicting you before your motion is heard, but the Sheriff could still evict you. You can ask your local sheriff's office what their policy is.
+  
+   If your residence is in Cook County and you file your motion within 30 days of entry of the eviction order, the Cook County Sheriff should not enforce the eviction order while the motion is pending. 
 terms:
   - "stayed": |
        If an order is stayed, it does not go into effect right away.
@@ -391,6 +393,8 @@ subject: |
   **How do I know if there are others?**
 content: |  
   At the top of the *Eviction Order* or any other papers related to your case, all plaintiffs and defendants will be listed.
+  
+  If somebody is not listed as a defendant on the *Eviction Order*, you do not have to include them in your motion.
 ---
 sets:
   - users[i].name.first
@@ -424,6 +428,10 @@ question: |
   What is the ${ordinal(i)} plaintiff's name?
   % endif
 subquestion: |
+  You should enter the name exactly as it is written on the *Eviction Order*. 
+  
+  If someone is not listed as a plaintiff on the *Eviction Order*, you do not need to enter their name.
+
   ${ collapse_template(long_name_help) }
 fields:
   - code: |
@@ -440,7 +448,7 @@ fields:
 ---
 id: any more other parties
 question: |
-  Are there any other plaintiffs in this lawsuit?
+  Are there any other plaintiffs named in the *Eviction Order*?
 subquestion: |  
   An additional plaintiff could be a second landlord, a property management company, or a bank.
   
