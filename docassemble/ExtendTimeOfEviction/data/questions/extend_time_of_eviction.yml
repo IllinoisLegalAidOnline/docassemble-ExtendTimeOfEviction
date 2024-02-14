@@ -140,8 +140,10 @@ code: |
   if users[0].email_notice == True:
     users[0].email
 
-  set_progress(100)
+  
   e_signature
+  to_sheriff_if_granted
+  set_progress(100)
   nav.set_section('section_download')
   get_docs_screen
 ---
@@ -192,12 +194,19 @@ subquestion: |
   
   If your motion is not heard in court before the stay period ends, the Sheriff can evict you. Giving the Sheriff a copy of your motion may delay the Sheriff from evicting you before your motion is heard, but the Sheriff could still evict you. You can ask your local sheriff's office what their policy is.
   
-   If your residence is in Cook County and you file your motion within 30 days of entry of the eviction order, the Cook County Sheriff should not enforce the eviction order while the motion is pending. 
+   If your residence is in Cook County and you file your motion within 30 days of entry of the eviction order, the Cook County Sheriff should not enforce the eviction order while the motion is pending.
 terms:
   - "stayed": |
        If an order is stayed, it does not go into effect right away.
   - "Notice of Motion": |
       This is a form telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Court Date for Motion** for you.
+---
+id: to sheriff if granted
+continue button field: to_sheriff_if_granted
+question: |
+  Court order
+subquestion: |
+  If the judge grants your motion, you should then deliver the court order to the sheriff's office.
 ---
 template: get_legal_help
 subject: |
