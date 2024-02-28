@@ -170,14 +170,14 @@ subquestion: |
   ${ collapse_template(help_example) }  
   
 
-  Click on **{green words}** to learn what they mean. Some questions have a question mark in a circle ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that also gives help.
+  Click on **{green words}** to learn what they mean. Some questions have a question mark in a circle ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that helps explain things.
 terms:
   - "Eviction Order": |
-      If your landlord has already won an eviction lawsuit against you to force you to leave your house or apartment, the judge will have issued an order. This order is called an Eviction Order.
+      If your landlord has already won an eviction lawsuit against you to force you to leave your house or apartment, the judge will have issued an order. This order is called an *Eviction Order*.
 ---
 template: help_example
 subject: |
-  **You can expand sections like this to show more information.**
+  **You can click sections like this to show more information.**
 content: |  
   This is an example of help. Click again to hide.
 ---
@@ -186,15 +186,15 @@ continue button field: stay_period
 question: |
   Stay period
 subquestion: |
-  Most Eviction Orders are **{stayed}** for a number of days. The sheriff cannot evict you until the stay period is over. 
+  Most *Eviction Orders* are **{stayed}** for a number of days. The sheriff cannot evict you until the stay period is over. 
 
-  **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
+  **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the sheriff can follow the court order to evict you.
 
   After you file the motion, you should hand deliver a copy of the motion and the **{Notice of Motion}** to the sheriff's office in the courthouse where the motion will be heard.
   
-  If your motion is not heard in court before the stay period ends, the Sheriff can evict you. Giving the Sheriff a copy of your motion may delay the Sheriff from evicting you before your motion is heard, but the Sheriff could still evict you. You can ask your local sheriff's office what their policy is.
+  If your motion is not heard in court before the stay period ends, the sheriff can evict you. Giving the sheriff a copy of your motion may delay the sheriff from evicting you before your motion is heard, but the sheriff could still evict you. You can ask your local sheriff's office what their policy is.
   
-   If your residence is in Cook County and you file your motion within 30 days of entry of the eviction order, the Cook County Sheriff should not enforce the eviction order while the motion is pending.
+   **Note for Cook County residents:** If you file your motion within 30 days of entry of the *Eviction Order*, the Cook County Sheriff should not enforce the *Eviction Order* while the motion is pending. Be sure to deliver a copy of the motion to the sheriff.
 terms:
   - "stayed": |
        If an order is stayed, it does not go into effect right away.
@@ -204,9 +204,9 @@ terms:
 id: to sheriff if granted
 continue button field: to_sheriff_if_granted
 question: |
-  Court order
+  Deliver court order to sheriff
 subquestion: |
-  If the judge grants your motion, you should then deliver the court order to the sheriff's office.
+  **Important:** If the judge grants your motion and extends the stay period, you should deliver the court order to the sheriff's office as soon as you can. This should stop the sheriff from evicting you until after the new stay period ends.
 ---
 template: get_legal_help
 subject: |
@@ -233,7 +233,7 @@ buttons:
 ---
 id: have order check
 question: |
-  Do you have the *Eviction Order* or other court papers from your case?
+  Do you have the *Eviction Order* from your case?
 subquestion: |
   
   ${ collapse_template(find_case_help) }  
@@ -243,7 +243,7 @@ fields:
 ---
 template: find_case_help
 subject: |
-  **How can I find this?**
+  **What if I don't have a copy of the *Eviction Order*?**
 content: |
   If your case was heard in Cook County, you can search for your case on the [**Clerk of the Circuit Court of Cook County website**](https://www.cookcountyclerkofcourt.org/online-case-information).
 
@@ -290,13 +290,13 @@ question: |
   Reminder
 subquestion: |
   % if has_stay_ended.days < 0:
-  **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the Sheriff can follow the court order to evict you.
+  **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the sheriff can follow the court order to evict you.
 
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you after the stay period expires.
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the sheriff. This may stop the sheriff from evicting you after the stay period expires.
   % else:
   Since the stay already ended on ${ stay_end_date }, the judge might not hear your *Motion to Continue or Extend Time*. You will need a good reason for why the judge should extend the stay.
   
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the Sheriff. This may stop the Sheriff from evicting you.
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the sheriff. This may stop the sheriff from evicting you.
   % endif
 terms:
   - "Notice of Motion": |
@@ -388,11 +388,13 @@ id: any other users
 question: |
   Are there any other defendants in this case?
 subquestion: |
-  ${ collapse_template(other_users_help) }  
+  If somebody is not listed as a defendant on the *Eviction Order*, you do not have to include them in your motion.
 
   % if len(users.elements) > 1:  
   So far you have told us about ${comma_and_list(users.complete_elements().full_names())}.
+  
   % endif  
+  ${ collapse_template(other_users_help) }  
 fields:
   - "Anyone else?": users.there_is_another
     datatype: yesnoradio
@@ -402,8 +404,6 @@ subject: |
   **How do I know if there are others?**
 content: |  
   At the top of the *Eviction Order* or any other papers related to your case, all plaintiffs and defendants will be listed.
-  
-  If somebody is not listed as a defendant on the *Eviction Order*, you do not have to include them in your motion.
 ---
 sets:
   - users[i].name.first
@@ -581,7 +581,7 @@ content: |
 
   * How much time has passed since the landlord started to evict you,
   * If you have family responsibilities or personal issues that make it hard for you to find a new place, and
-  * When the Sheriff will be able to enforce the *Eviction Order*.
+  * When the sheriff will be able to enforce the *Eviction Order*.
 ---
 id: trial court county
 continue button field: case_county
@@ -638,7 +638,7 @@ template: case_number_help
 subject: |
   **Where can I find this?**
 content: |  
-  The case number should be on your court papers. Look at the Eviction Order or any other documents the court sent you. The number is usually in the top-right part of the first page.
+  The case number should be on your court papers. Look at the *Eviction Order* or any other documents the court sent you. The number is usually in the top-right part of the first page.
 ---
 id: notice by email
 question: |
