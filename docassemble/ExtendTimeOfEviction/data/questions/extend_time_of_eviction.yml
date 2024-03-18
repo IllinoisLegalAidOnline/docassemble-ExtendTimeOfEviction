@@ -1071,16 +1071,18 @@ content: |
   [Illinois Legal Aid Online](https://www.illinoislegalaid.org)
 ---
 objects:
-  - motion_instructions: ALDocument.using(title="Instructions", filename="instructions.pdf", has_addendum=False)
+  - motion_instructions: ALDocument.using(title="Motion instructions", filename="more_instructions.pdf", has_addendum=False)
   - motion_extend: ALDocument.using(title="Motion to Continue or Extend Time", filename="motion.pdf", has_addendum=False)
   - motion_additional_delivery: ALDocument.using(title="Additional Proof of Delivery", filename="motion_additional_proof_delivery.pdf", has_addendum=False)
   - motion_additional_delivery_2: ALDocument.using(title="Additional Proof of Delivery 2", filename="appearance_additional_proof_delivery_2.pdf", has_addendum=False)
   - motion_additional_delivery_3: ALDocument.using(title="Additional Proof of Delivery 3", filename="appearance_additional_proof_delivery_3.pdf", has_addendum=False)
   - motion_additional_delivery_blank: ALDocument.using(title="Additional Proof of Delivery (blank)", filename="motion_additional_proof_delivery_blank.pdf", has_addendum=False)
   - notice_attachment: ALDocument.using(title="Notice of Court Date for Motion", filename="notice_of_court_date.pdf", has_addendum=False)
-  - motion_order: ALDocument.using(title="Order", filename="order.pdf", has_addendum=False)  
+  - motion_order: ALDocument.using(title="Order", filename="order.pdf", has_addendum=False) 
+  - extend_eviction_instructions: ALDocument.using(title="Extend time of eviction instructions", filename='instructions.pdf', has_addendum=False)
 ---
 code: |
+  extend_eviction_instructions.enabled = True
   motion_extend.enabled = True
   motion_instructions.enabled = True
   motion_additional_delivery.enabled = False
@@ -1111,12 +1113,18 @@ code: |
       motion_additional_delivery_blank.enabled = True
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[motion_instructions, motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[extend_eviction_instructions, motion_instructions, motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="All forms")
   - al_court_bundle: ALDocumentBundle.using(elements=[motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="Motion")
 ---
 objects:
   - motion_single_pdf_bundle: ALDocumentBundle.using(elements=[motion_extend, motion_additional_delivery, motion_additional_delivery_2, motion_additional_delivery_3], filename="motion.pdf", title="Motion to Continue or Extend Time")
   - notice_single_pdf_bundle: ALDocumentBundle.using(elements=[notice_attachment, motion_additional_delivery, motion_additional_delivery_2, motion_additional_delivery_3], filename="notice.pdf", title="Notice of Court Date for Motion")
+---
+attachment:
+  variable name: extend_eviction_instructions[i]
+  name: extend_eviction_instructions
+  filename: extend_eviction_instructions
+  docx template file: extend_time_of_eviction_instructions.docx
 ---
 attachment:
   variable name: motion_instructions[i]
