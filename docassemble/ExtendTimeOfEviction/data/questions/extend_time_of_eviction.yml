@@ -295,11 +295,11 @@ subquestion: |
   % if has_stay_ended.days < 0:
   **Important:** It is best to file the motion made by this program before the stay period ends on ${ stay_end_date }. After the stay period, the sheriff can follow the court order to evict you.
 
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the sheriff. This may stop the sheriff from evicting you after the stay period expires.
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the sheriff as soon as possible. This may stop the sheriff from evicting you after the stay period expires.
   % else:
-  Since the stay already ended on ${ stay_end_date }, the judge might not hear your *Motion to Continue or Extend Time*. You will need a good reason for why the judge should extend the stay.
+  Since the stay period already ended on ${ stay_end_date }, the judge might not hear your *Motion to Continue or Extend Time*. You will need a good reason for why the judge should extend the stay.
   
-  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the sheriff. This may stop the sheriff from evicting you.
+  After you file the motion, you should give a copy of the motion and the **{Notice of Motion}** to the sheriff as soon as possible. This may stop the sheriff from evicting you.
   % endif
 terms:
   - "Notice of Motion": |
@@ -1085,6 +1085,7 @@ code: |
   extend_eviction_instructions.enabled = True
   motion_extend.enabled = True
   motion_instructions.enabled = True
+  instructions_bundle.enabled = True
   motion_additional_delivery.enabled = False
   motion_additional_delivery_2.enabled = False
   motion_additional_delivery_3.enabled = False
@@ -1113,8 +1114,11 @@ code: |
       motion_additional_delivery_blank.enabled = True
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[extend_eviction_instructions, motion_instructions, motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions_bundle, motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="All forms")
   - al_court_bundle: ALDocumentBundle.using(elements=[motion_single_pdf_bundle, motion_additional_delivery_blank, notice_single_pdf_bundle, motion_order], filename="motion.pdf", title="Motion")
+---
+objects: 
+  - instructions_bundle: ALDocumentBundle.using(elements=[extend_eviction_instructions, motion_instructions], filename="instructions.pdf", title="Instructions")
 ---
 objects:
   - motion_single_pdf_bundle: ALDocumentBundle.using(elements=[motion_extend, motion_additional_delivery, motion_additional_delivery_2, motion_additional_delivery_3], filename="motion.pdf", title="Motion to Continue or Extend Time")
@@ -1147,9 +1151,9 @@ attachment:
       - "preview_watermark": ${ watermark if i=='preview' else '' }
       - "attach_statement_no": ${ True }
       - "trial_court_county": ${ trial_court.address.county.upper() }
-      - "plaintiffs": ${users.full_names()}
+      - "defendants": ${users.full_names()}
       #${ users.full_names() if party_label == "plaintiff" or party_label == "petitioner" else other_parties.full_names()}
-      - "defendants": ${other_parties.full_names()}
+      - "plaintiffs": ${other_parties.full_names()}
       #${list_defendants(users.full_names(), other_parties.full_names(), anyone_opposing, party_label)}
       - "preview_watermark": ${ watermark if i=='preview' else '' }
       - "user__1": ${ users[0].name.full(middle="full") }
@@ -1169,8 +1173,8 @@ attachment:
       - "e_sign_name__1": ${ users[0].name.full(middle="full") if e_signature else '' }
       - "e_sign_name__2": ${ users[0].name.full(middle="full") if e_signature else '' }
       - "is_email_notice_yes": ${ users[0].email_notice }
-      - "motion_by_plaintiff": ${ party_label == "plaintiff" or party_label == "petitioner" }
-      - "motion_by_defendant": ${ party_label == "defendant" or party_label == "respondent" }
+      - "motion_by_plaintiff": ${ False }
+      - "motion_by_defendant": ${ True }
       #- "additional_motion_cb": ${ True if motion_additional_page else '' }
       - "extend_cb": ${True}
       - "continue_cb": ${False}
