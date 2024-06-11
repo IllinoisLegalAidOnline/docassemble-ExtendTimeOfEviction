@@ -51,6 +51,7 @@ mandatory: True
 code: |
   nav.set_section('section_intro')
   sees_nav_bar
+  snapshot_start
   how_to_use
   accept_terms
   set_progress(5)
@@ -148,7 +149,34 @@ code: |
   to_sheriff_if_granted
   set_progress(100)
   nav.set_section('section_download')
+  forms_assembling
+  snapshot_forms
   get_docs_screen
+---
+code: |
+  stuff_to_snapshot = {
+  	'start_time': str(current_datetime().format_datetime()),
+  	'started_interview': True, 
+  	}
+    
+  stuff_to_snapshot['user_zip'] = showifdef('users[0].address.zip')
+
+  stuff_to_snapshot['downloaded_forms'] = showifdef('forms_assembling')
+  
+  stuff_to_snapshot['days_since_stay_ended'] = showifdef('has_stay_ended.days')
+  
+  store_variables_snapshot(
+  	data=stuff_to_snapshot, persistent=True
+  	)
+  snapshot_interview_state = True
+---
+code: |
+  snapshot_interview_state
+  snapshot_start = True  
+---
+code: |
+  reconsider('snapshot_interview_state')
+  snapshot_forms = True
 ---
 id: welcome
 question: |
@@ -238,8 +266,9 @@ id: have order check
 question: |
   Do you have the *Eviction Order* from your case?
 subquestion: |
-  
-  ${ collapse_template(find_case_help) }  
+  If your case was heard in Cook County, you can search for your case on the [**Clerk of the Circuit Court of Cook County website**](https://www.cookcountyclerkofcourt.org/online-case-information).
+
+  If your case was heard in another county, you will need to contact the Clerk of the Court for that county to get your case information. To learn more, read ILAO's article about [**getting copies of court records**](https://www.illinoislegalaid.org/legal-information/how-get-copies-your-court-records).
 fields:
   - no label: have_order_check
     datatype: yesnoradio  
@@ -1029,6 +1058,17 @@ subquestion: |
 
   * If a party in your case does not have a lawyer, you can hand-deliver the forms to them or to a family member who is 13 or older at their home.
   * If they do have a lawyer, you can hand-deliver the forms to the lawyer or to the lawyer's office.
+---
+id: forms assembling
+continue button field: forms_assembling
+question: |
+  Almost done
+subquestion: |
+  After you click **Next**, it may take a few moments to finish making your forms.
+  
+  ###### You do not need to refresh your screen. Hang in there!
+  
+  [NEWLINE]
 ---
 id: get docs screen
 event: get_docs_screen
