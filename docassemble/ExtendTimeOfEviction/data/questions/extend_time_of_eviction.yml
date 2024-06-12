@@ -163,7 +163,7 @@ code: |
 
   stuff_to_snapshot['downloaded_forms'] = showifdef('forms_assembling')
   
-  stuff_to_snapshot['days_since_stay_ended'] = showifdef('has_stay_ended.days')
+  stuff_to_snapshot['stay_has_ended'] = showifdef('stay_has_ended')
   
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
@@ -315,6 +315,10 @@ depends on:
   - stay_end_date
 code: |
   has_stay_ended = date_difference(starting=stay_end_date, ending=today())
+  if has_stay_ended.days < 0:
+    stay_has_ended = False
+  else:
+    stay_has_ended = True
 ---
 id: urgency reminder
 continue button field: urgency_reminder
