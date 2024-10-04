@@ -44,7 +44,7 @@ code: |
 sections:
   - section_intro: Start
   - section_judgment: Eviction Order
-  - section_motion: Motion
+  - section_motion: Motion details
   - section_delivery: Notice and delivery
   - section_user: About you
   - section_download: Download  
@@ -194,7 +194,7 @@ subquestion: |
 
   **Important:** It is best to file the motion made by this program before the stay period ends. After the stay period, the sheriff can follow the court order to evict you.
 
-  After you file the motion, you should hand deliver a copy of the motion and the **{Notice of Motion}** to the sheriff's office in the courthouse where the motion will be heard.
+  After you file the motion, you should hand deliver a copy of the motion and the **{Notice of Court Date for Motion}** to the sheriff's office in the courthouse where the motion will be heard.
   
   If your motion is not heard in court before the stay period ends, the sheriff can evict you. Giving the sheriff a copy of your motion may delay the sheriff from evicting you before your motion is heard, but the sheriff could still evict you. You can ask your local sheriff's office what their policy is.
   
@@ -202,7 +202,7 @@ subquestion: |
 terms:
   - "stayed": |
        If an order is stayed, it does not go into effect right away.
-  - "Notice of Motion": |
+  - "Notice of Court Date for Motion": |
       This is a form telling other parties in a lawsuit that you have filed a motion and when the motion will be heard in court. This interview will create a **Notice of Court Date for Motion** for you.
 ---
 id: to sheriff if granted
@@ -560,7 +560,7 @@ template: move_out_time
 subject: |
   **How much time is reasonable?**
 content: |  
-  Judges consider several things when deciding whether to give you more time to move, including
+  Judges consider several things when deciding whether to give you more time to move, including:
 
   * How much time has passed since the landlord started to evict you,
   * If you have family responsibilities or personal issues that make it hard for you to find a new place, and
@@ -1764,7 +1764,7 @@ attachment:
   editable: False
   pdf template file: order_on_motion_to_continue.pdf
   fields:
-      - "trial_court_county": ${ trial_court.address.county.upper() }
+      - "trial_court_county": ${ trial_court.address.county }
       - "plaintiffs": |
           % if other_parties.number() > 1:
           ${ other_parties[0].name.full(middle="full") }, et al.
@@ -2125,7 +2125,7 @@ review:
 #        * ${ my_var.name.full(middle="full") }
 #      % endfor
 ---
-section: Motion
+section: Motion details
 id: motion review screen
 event: section_motion
 question: |
