@@ -383,7 +383,7 @@ subquestion: |
   If somebody is not listed as a defendant on the *Eviction Order*, you do not have to include them in your motion.
 
   % if len(users.elements) > 1:  
-  So far you have told us about ${comma_and_list(users.complete_elements().full_names())}.
+  So far you have told us about ${users.full_names()}.
   
   % endif  
   ${ collapse_template(other_users_help) }  
@@ -444,7 +444,7 @@ question: |
 subquestion: |  
   An additional plaintiff could be a second landlord, a property management company, or a bank.
   
-  So far you have told us about ${comma_and_list(other_parties.complete_elements().full_names())}.
+  So far you have told us about ${other_parties.full_names()}.
 fields:
   - "Anyone else?": other_parties.there_is_another
     datatype: yesnoradio
@@ -542,7 +542,7 @@ reconsider: True
 code: |
   motion_reason = "Since the entry of the order, " + i_or_we + " " + have_or_has + " been trying to find a place to move " + defendants_apostrophe + " family and possessions. " +  moving_issues_explanation + "\n"
   if new_place_check == True:
-    motion_reason += "3. " + comma_and_list(users) + " " +  have_or_has + " been able to locate a new apartment that will be available on " + new_place_date + ".\n"
+    motion_reason += "3. " + users.full_names() + " " +  have_or_has + " been able to locate a new apartment that will be available on " + new_place_date + ".\n"
 ---
 id: move out date
 question: |
@@ -629,7 +629,7 @@ continue button field: notice_intro
 question: |
   Tell all other parties in your case about your motion
 subquestion: |
-  These are the other parties in this case: ${comma_and_list(delivery_parties)}.
+  These are the other parties in this case: ${comma_and_list(person.name_full() for person in delivery_parties)}.
 
   You must tell them about your motion and when you will present it to the judge. You can do this by sending a copy of your ${ form_name } to each of them.
 
@@ -769,7 +769,7 @@ continue button field: notice_intro
 question: |
   Tell all other parties in your case about your motion
 subquestion: |
-  These are the other parties in this case: ${comma_and_list(delivery_parties)}.
+  These are the other parties in this case: ${comma_and_list(person.name_full() for person in delivery_parties)}.
 
   You must tell them about your motion and when you will present it to the judge.
 
@@ -782,7 +782,7 @@ continue button field: delivery_intro
 question: |
   Tell all other parties in your case about your motion
 subquestion: |
-  These are the other parties in this case: ${comma_and_list(delivery_parties)}.
+  These are the other parties in this case: ${comma_and_list(person.name_full() for person in delivery_parties)}.
   
   You must tell them about your motion and when the judge will decide whether to give you more time.  You must send copies of your forms to each party.
 
@@ -793,7 +793,7 @@ continue button field: delivery_intro
 question: |
   Send your ${ form_name } to all other parties
 subquestion: |
-  These are the other parties in this case: ${comma_and_list(delivery_parties)}.
+  These are the other parties in this case: ${comma_and_list(person.name_full() for person in delivery_parties)}.
 
   You must send a copy of your forms to each of them.
 
