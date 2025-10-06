@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "docassemble.ExtendTimeOfEviction"
-version = "1.0.13"
+version = "1.2.0"
 description = "A docassemble extension."
 readme = "README.md"
 authors = [

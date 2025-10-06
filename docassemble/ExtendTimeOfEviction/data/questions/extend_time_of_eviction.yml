@@ -482,42 +482,8 @@ fields:
   - I need more time because:: moving_issues_explanation
     label above field: True
     input type: area
-    rows: 10
+    rows: 11
     maxlength: 750
-script: |
-  <script>
-    $(document).on('daPageLoad', function() {
-      var maxLength = 750; // This should match the textarea maxlength
-      var textareas = document.querySelectorAll('textarea');
-      textareas.forEach(function (textarea) {
-        var counterId = textarea.id + "_counter";
-        if (document.getElementById(counterId)) return;
-
-        var counter = document.createElement("div");
-        counter.id = counterId;
-        counter.style.textAlign = "right";
-        counter.style.fontSize = "1em";
-        counter.style.color = "#555";
-
-        function updateCounter() {
-          var len = textarea.value.length;
-          counter.textContent = len + "/" + maxLength;
-          if (len > maxLength) {
-            counter.style.fontWeight = "bold";
-            counter.style.color = "#000";
-          } else {
-            counter.style.fontWeight = "normal";
-            counter.style.color = "#555";
-          }
-        }
-
-        textarea.parentNode.appendChild(counter);
-        textarea.addEventListener("input", updateCounter);
-        updateCounter();
-      });
-    });
-  </script>
-
 ---
 id: preview motion
 continue button field: preview_motion
