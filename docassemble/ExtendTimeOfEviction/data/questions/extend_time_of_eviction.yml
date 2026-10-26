@@ -1646,8 +1646,10 @@ review:
       ${ "Fourth Municipal District, 1500 Maybrook Drive, Maywood" }
       % elif cook_district == "19":
       ${ "Fifth Municipal District, 10220 S. 76th Avenue, Bridgeview" }
-      % else:
+      % elif cook_district == "20":
       ${ "Sixth Municipal District, 16501 South Kedzie Parkway, Markham" }
+      % else:
+      No courthouse selected
       % endif      
     show if: trial_court_index == -1 
   - Edit:
@@ -1940,8 +1942,10 @@ review:
       ${ "Fourth Municipal District, 1500 Maybrook Drive, Maywood" }
       % elif cook_district == "19":
       ${ "Fifth Municipal District, 10220 S. 76th Avenue, Bridgeview" }
-      % else:
+      % elif cook_district == "20":
       ${ "Sixth Municipal District, 16501 South Kedzie Parkway, Markham" }
+      % else:
+      No courthouse selected
       % endif      
     show if: trial_court_index == -1 
   - Edit:
